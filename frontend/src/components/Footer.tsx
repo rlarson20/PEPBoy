@@ -1,0 +1,1 @@
+//purpose: static content

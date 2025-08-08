@@ -1,0 +1,15 @@
+<https://github.com/PyGithub/PyGithub/blob/main/github/ContentFile.py>
+<https://peps.python.org/api/>
+<https://github.com/python/peps/blob/main/peps/pep-0001.rst?plain=1>
+<https://peps.python.org/pep-0001/>
+<https://peps.python.org/api/peps.json>
+<https://docs.pydantic.dev/latest/api/base_model/#pydantic.BaseModel.model_validate_json>
+<https://docs.pydantic.dev/latest/concepts/fields/#field-aliases>
+<https://stackoverflow.com/questions/12883428/how-to-parse-restructuredtext-in-python>
+<https://typing.python.org/en/latest/spec/literal.html>
+<https://reflex.dev/docs/pages/overview/>
+<https://docutils.sourceforge.io/docs/api/publisher.html#publish-parts>
+<https://reflex.dev/docs/library/other/html/>
+<https://docs.python.org/3/library/typing.html>
+<https://mypy.readthedocs.io/en/stable/cheat_sheet_py3.html>
+<https://docs.pydantic.dev/latest/concepts/validators/>

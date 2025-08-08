@@ -1,7 +1,20 @@
 import { useState } from 'react'
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
+
+function mockApp() {
+  return (
+    <BrowserRouter>
+      <Routes>
+        {/* <Route index element={<StepOne />} /> */}
+        {/* <Route path="step-2" element={<StepTwo />} /> */}
+        {/* <Route path="step-3" element={<StepThree />} /> */}
+      </Routes>
+    </BrowserRouter>
+  );
+}
 
 function App() {
   const [count, setCount] = useState(0)
@@ -33,3 +46,8 @@ function App() {
 }
 
 export default App
+
+//TODO:
+//Import BrowserRouter, Routes, Route from react-router-dom
+//define 3 main routes
+//wrap in BrowserRouter
