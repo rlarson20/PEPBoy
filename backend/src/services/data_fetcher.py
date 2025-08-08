@@ -25,7 +25,6 @@ def get_pep_files(data: "httpx.Response"):
     urls: list[str] = []
     for metadata in data.json().values():
         urls.append(metadata["url"])
-    # TODO: check for 0000 because that's the index and doesn't exist in the repo, can redirect to our index
     names = [urlparse(u).path.strip("/") + ".rst" for u in urls]
     if _INDEX_PEP in names:
         names.remove(_INDEX_PEP)
