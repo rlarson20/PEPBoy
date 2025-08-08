@@ -22,6 +22,13 @@ def get_pep_by_number(pep_number: int):
     pass
 
 
+# initial simple search
 @app.get("/api/search")
-def full_text_search(q: str):
+def search_pep_by_title(q: str):
     pass
+
+
+# honestly might get shelved soon, FTS comes after v1
+# @app.get("/api/fts")
+# def full_text_search(q: str):
+#     pass
