@@ -4,15 +4,14 @@
 
 import httpx
 
-# from pprint import pprint as pp
 from urllib.parse import urlparse
 from pathlib import Path
 
-_SCRIPT_DIR = Path(__file__).parent  # src/services
+_SCRIPT_DIR = Path(__file__).resolve().parent  # src/services
 _PROJECT_DIR = _SCRIPT_DIR.parent.parent  # backend
 
-_PEP_REPO = Path(str(_PROJECT_DIR) + "/PEP_repo")
-_PEPS_DIR = Path(str(_PEP_REPO) + "/peps")
+_PEP_REPO = Path(str(_PROJECT_DIR) + "/PEP_repo").resolve()
+_PEPS_DIR = Path(str(_PEP_REPO) + "/peps").resolve()
 _PEP_URL = "https://peps.python.org/api/peps.json"
 _INDEX_PEP = "pep-0000.rst"
 
@@ -22,6 +21,7 @@ def get_pep_json_data():
 
 
 def get_pep_files(data: "httpx.Response"):
+    """turn the data from the call into list of name files"""
     urls: list[str] = []
     for metadata in data.json().values():
         urls.append(metadata["url"])
@@ -32,16 +32,12 @@ def get_pep_files(data: "httpx.Response"):
 
 
 def get_raw_pep_text(pep_name: str):
+    """gets the data from the PEP file locally"""
     try:
-        print(_PEPS_DIR)
-        with open(str(_PEPS_DIR) + "/" + pep_name + ".rst", "r") as f:
+        with open(str(_PEPS_DIR) + "/" + pep_name, "r") as f:
             return f.read()
     except Exception as e:
-        print(f"Error: {e}")
-
-
-# pp(get_raw_pep_data(get_pep_urls(get_pep_json_data())[0]))
-# pp(get_pep_files(get_pep_json_data()))
+        return f"Error: {e}"
 
 
 def test_if_peps_have_been_updated():
@@ -63,4 +59,22 @@ def test_if_peps_have_been_updated():
     print(f"Succeeded: {succ}\nFailed: {fail}\nTotal: {total}")
 
 
-print(get_raw_pep_text("pep-0008"))
+def get_name_from_meta(meta: str):
+    first_line = meta.split("\n", maxsplit=1)[0]
+    return first_line.strip().split(" ", maxsplit=1)[1]
+
+
+def main():
+    # trying to get something working, will be refactored
+    raw_data = get_pep_json_data()
+    metadata_json = raw_data.json()
+    files = get_pep_files(raw_data)
+    raw_text = [get_raw_pep_text(file) for file in files]
+    for rst in raw_text:
+        headers, content = rst.split("\n\n", maxsplit=1)
+        content = content.lstrip()
+        pep_num = get_name_from_meta(headers)
+
+
+if __name__ == "__main__":
+    main()
