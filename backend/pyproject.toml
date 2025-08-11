@@ -23,6 +23,9 @@ dependencies = [
 	"python-slugify>=8.0.0",
 	"pydantic>=2.11.7",
 	"pydantic-settings>=2.10.1",
+	"pytest>=8.4.1",
+	"pytest-asyncio>=1.1.0",
+	"pytest-cov>=6.2.1",
 ]
 
 [project.optional-dependencies]

@@ -1,14 +1,15 @@
 # TODO: create models for API responses for type safety, consistent data contracts
 from pydantic import BaseModel
 from datetime import date
-from typing import List, Optional
+
 
 class AuthorResponse(BaseModel):
     id: int
     name: str
-    
+
     class Config:
-        from_attributes = True
+        from_attributes: bool = True
+
 
 class PEPResponse(BaseModel):
     number: int
@@ -16,16 +17,18 @@ class PEPResponse(BaseModel):
     status: str
     type: str
     topic: str
-    created: Optional[date]
-    python_version: Optional[str]
+    created: date | None
+    python_version: str | None
     url: str
-    authors: List[AuthorResponse]
-    
+    authors: list[AuthorResponse]
+
     class Config:
-        from_attributes = True
+        from_attributes: bool = True
+
 
 class PEPListResponse(BaseModel):
-    peps: List[PEPResponse]
+    peps: list[PEPResponse]
     total: int
     skip: int
     limit: int
+
