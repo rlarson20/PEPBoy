@@ -1,12 +1,13 @@
 # TODO: use the `services/data_fetcher.py` to populate database
 
-from .services.data_fetcher import get_pep_json_data
+from ..services.data_fetcher import get_pep_json_data
 
 
 def populate_database():
-    metadata = get_pep_json_data.json()
+    response = get_pep_json_data()
+    metadata = response.json()
 
-    for pep_number, pep_data in metadata_json.items():
+    for pep_number, pep_data in metadata.items():
         pass
         # make pep objects
         # create/update DB records
