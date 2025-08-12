@@ -23,10 +23,10 @@ def get_all_peps(skip: int = 0, limit: int = 100, db: Session = Depends(get_db))
     peps = repo.list_all_peps(skip=skip, limit=limit)
     total = repo.get_peps_count()
     return PEPListResponse(
-        peps=[PEPResponse.from_orm(pep) for pep in peps],
+        peps=[PEPResponse.model_validate(pep) for pep in peps],
         total=total,
         skip=skip,
-        limit=limit
+        limit=limit,
     )
 
 
@@ -36,7 +36,7 @@ def get_pep_by_number(pep_number: int, db: Session = Depends(get_db)):
     pep = repo.get_pep_by_number(pep_number)
     if not pep:
         raise HTTPException(status_code=404, detail="PEP not found")
-    return PEPResponse.from_orm(pep)
+    return PEPResponse.model_validate(pep)
 
 
 # initial simple search
@@ -45,10 +45,10 @@ def search_pep_by_title(q: str, db: Session = Depends(get_db)):
     repo = PEPRepository(db)
     peps = repo.search_peps_by_title(q)
     return PEPListResponse(
-        peps=[PEPResponse.from_orm(pep) for pep in peps],
+        peps=[PEPResponse.model_validate(pep) for pep in peps],
         total=len(peps),
         skip=0,
-        limit=len(peps)
+        limit=len(peps),
     )
 
 
