@@ -1,10 +1,12 @@
 # PEPBoy Implementation Roadmap & Next Steps
 
 ## Overview
+
 This document provides a comprehensive, prioritized plan to take PEPBoy from its current early development stage to a fully functional MVP. The plan is organized into phases with specific implementation steps, technical approaches, and success criteria.
 
 ## Phase 1: Core Backend Functionality (Week 1-2)
-*Priority: Critical - Foundation for everything else*
+
+_Priority: Critical - Foundation for everything else_
 
 ### 1.1 Database Population System
 
@@ -15,9 +17,11 @@ This document provides a comprehensive, prioritized plan to take PEPBoy from its
 **Implementation Steps**:
 
 1. **Implement Database Population** (1-2 days)
+
    ```python
    # File: backend/src/tasks/populate_db.py
    ```
+
    - Use existing [`get_pep_json_data()`](backend/src/services/data_fetcher.py:19-20) function
    - Parse JSON metadata directly (all fields already available)
    - Create Author entities and handle many-to-many relationships
@@ -34,6 +38,7 @@ This document provides a comprehensive, prioritized plan to take PEPBoy from its
    - Command to validate database integrity
 
 **Technical Approach**:
+
 ```python
 # Example implementation structure using existing data_fetcher
 from .services.data_fetcher import get_pep_json_data
@@ -43,7 +48,7 @@ def populate_database():
     # Get JSON metadata from official API
     response = get_pep_json_data()
     metadata_json = response.json()
-    
+
     # Each key is PEP number, value contains all metadata
     for pep_number, pep_data in metadata_json.items():
         # pep_data already contains: title, author, status, type, created, etc.
@@ -52,6 +57,7 @@ def populate_database():
 ```
 
 **Success Criteria**:
+
 - [ ] Database contains all PEPs from repository
 - [ ] API endpoints return real data
 - [ ] Population can be re-run safely (idempotent)
@@ -63,12 +69,15 @@ def populate_database():
 **Implementation Steps**:
 
 1. **RST to HTML Conversion** (1-2 days)
+
    ```bash
    pip install docutils beautifulsoup4
    ```
+
    ```python
    # File: backend/src/services/content_processor.py
    ```
+
    - Use existing [`get_raw_pep_text()`](backend/src/services/data_fetcher.py:34-40) function
    - Use `docutils` to convert RST to HTML
    - Sanitize HTML output with BeautifulSoup
@@ -76,6 +85,7 @@ def populate_database():
    - Generate clean, readable HTML
 
 2. **Content Storage Strategy** (1 day)
+
    - Add `content_html` field to PEP model
    - Store processed HTML in database during population
    - Implement lazy loading for large content
@@ -86,6 +96,7 @@ def populate_database():
    - Add content field to existing PEP detail endpoint
 
 **Technical Approach**:
+
 ```python
 from docutils.core import publish_string
 from bs4 import BeautifulSoup
@@ -95,10 +106,10 @@ def process_pep_content(pep_filename: str) -> str:
     """Convert RST to clean HTML using existing data_fetcher"""
     # Get RST content using existing function
     rst_content = get_raw_pep_text(pep_filename)
-    
+
     # Use docutils to convert RST to HTML
     html = publish_string(rst_content, writer_name='html5')
-    
+
     # Clean and sanitize HTML with BeautifulSoup
     soup = BeautifulSoup(html, 'html.parser')
     # Return processed content
@@ -106,12 +117,14 @@ def process_pep_content(pep_filename: str) -> str:
 ```
 
 **Success Criteria**:
+
 - [ ] PEP content displays as clean HTML
 - [ ] All RST formatting preserved
 - [ ] Content API endpoint functional
 
 ## Phase 2: Frontend Foundation (Week 2-3)
-*Priority: High - User interface essentials*
+
+_Priority: High - User interface essentials_
 
 ### 2.1 React Component Implementation
 
@@ -120,22 +133,26 @@ def process_pep_content(pep_filename: str) -> str:
 **Implementation Steps**:
 
 1. **Core Layout Components** (2-3 days)
+
    ```typescript
    // File: frontend/src/components/Layout.tsx
    ```
+
    - Header with navigation and search
    - Footer with project info
    - Responsive layout container
    - Global CSS styling
 
 2. **PEP List Components** (2-3 days)
+
    ```typescript
-   // Files: 
+   // Files:
    // - frontend/src/components/HomePage.tsx
    // - frontend/src/components/PEPList.tsx
    // - frontend/src/components/PEPListItem.tsx
    // - frontend/src/components/PaginationControls.tsx
    ```
+
    - Fetch and display paginated PEP list
    - Implement search functionality
    - Add filtering by status/type
@@ -151,9 +168,10 @@ def process_pep_content(pep_filename: str) -> str:
    - Add navigation breadcrumbs
 
 **Technical Approach**:
+
 ```typescript
 // Example service integration
-import { fetchPeps, fetchPepById } from '../services/api';
+import { fetchPeps, fetchPepById } from "../services/api";
 
 // Component structure with hooks
 const HomePage: React.FC = () => {
@@ -170,9 +188,11 @@ const HomePage: React.FC = () => {
 **Implementation Steps**:
 
 1. **Route Configuration** (1 day)
+
    ```typescript
    // File: frontend/src/App.tsx
    ```
+
    - Home page: `/`
    - PEP detail: `/pep/{number}`
    - Search results: `/search?q={query}`
@@ -187,21 +207,25 @@ const HomePage: React.FC = () => {
    - Navigation links
 
 **Success Criteria**:
+
 - [ ] All major pages accessible via routing
 - [ ] Search functionality working end-to-end
 - [ ] Responsive design on mobile/desktop
 
 ## Phase 3: Enhanced Features (Week 3-4)
-*Priority: Medium - Improved user experience*
+
+_Priority: Medium - Improved user experience_
 
 ### 3.1 Search Enhancement
 
 **Implementation Steps**:
 
 1. **Advanced Search Backend** (2-3 days)
+
    ```python
    # File: backend/src/services/search_service.py
    ```
+
    - Implement multi-field search (title, content, author)
    - Add filtering by status, type, creation date
    - Optimize database queries with proper indexing
@@ -220,6 +244,7 @@ const HomePage: React.FC = () => {
 **Implementation Steps**:
 
 1. **Backend Optimization** (1-2 days)
+
    - Add database indexes for common queries
    - Implement response caching
    - Optimize N+1 queries in relationships
@@ -230,18 +255,21 @@ const HomePage: React.FC = () => {
    - Optimize bundle size
 
 ## Phase 4: Production Readiness (Week 4-5)
-*Priority: Medium - Deployment and reliability*
+
+_Priority: Medium - Deployment and reliability_
 
 ### 4.1 Configuration & Environment Setup
 
 **Implementation Steps**:
 
 1. **Environment Configuration** (1-2 days)
+
    ```python
    # File: backend/requirements.txt
    # File: backend/.env.example
    # File: frontend/.env.example
    ```
+
    - Create proper requirements.txt
    - Environment variables for different stages
    - Configuration validation
@@ -259,9 +287,11 @@ const HomePage: React.FC = () => {
 **Implementation Steps**:
 
 1. **Backend Testing** (2-3 days)
+
    ```python
    # Files: backend/tests/test_*.py
    ```
+
    - Unit tests for services and repositories
    - Integration tests for API endpoints
    - Test database fixtures
@@ -275,7 +305,8 @@ const HomePage: React.FC = () => {
    - Mock API responses
 
 ## Phase 5: Deployment & Documentation (Week 5-6)
-*Priority: Low - Production deployment*
+
+_Priority: Low - Production deployment_
 
 ### 5.1 Containerization
 
@@ -283,7 +314,7 @@ const HomePage: React.FC = () => {
 
 1. **Docker Setup** (2-3 days)
    ```dockerfile
-   # Files: 
+   # Files:
    # - backend/Dockerfile
    # - frontend/Dockerfile
    # - docker-compose.yml
@@ -297,6 +328,7 @@ const HomePage: React.FC = () => {
 **Implementation Steps**:
 
 1. **API Documentation** (1-2 days)
+
    - OpenAPI/Swagger documentation
    - API usage examples
    - Authentication documentation (if needed)
@@ -323,7 +355,7 @@ cd backend
 python -m src.cli populate-db    # Populate database
 python -m uvicorn src.app:app --reload  # Run development server
 
-# Frontend development  
+# Frontend development
 cd frontend
 npm run dev                      # Run development server
 npm run build                    # Build for production
@@ -338,26 +370,31 @@ alembic upgrade head             # Apply migrations
 ### Success Metrics by Phase
 
 **Phase 1 Complete**:
+
 - Database contains real PEP data
 - API returns functional responses
 - Backend has content processing
 
 **Phase 2 Complete**:
+
 - Functional frontend with routing
 - PEP browsing and detail views work
 - Search functionality operational
 
 **Phase 3 Complete**:
+
 - Enhanced search with filters
 - Performance optimizations applied
 - Error handling implemented
 
 **Phase 4 Complete**:
+
 - Test coverage >80%
 - Environment configuration complete
 - Production-ready configuration
 
 **Phase 5 Complete**:
+
 - Deployable Docker containers
 - Complete documentation
 - Monitoring and logging setup
@@ -367,10 +404,12 @@ alembic upgrade head             # Apply migrations
 ### Technical Risks
 
 1. **PEP Format Inconsistencies**
+
    - Mitigation: Robust parsing with error handling
    - Fallback: Manual data entry for problematic PEPs
 
 2. **Performance with Large Dataset**
+
    - Mitigation: Database indexing and pagination
    - Monitoring: Query performance tracking
 
@@ -381,6 +420,7 @@ alembic upgrade head             # Apply migrations
 ### Resource Risks
 
 1. **Timeline Pressure**
+
    - Mitigation: Focus on MVP features first
    - Defer advanced features to later phases
 
@@ -389,3 +429,4 @@ alembic upgrade head             # Apply migrations
    - Regular security updates
 
 This roadmap provides a clear path from the current state to a fully functional PEPBoy application. Each phase builds upon the previous one, ensuring steady progress toward a production-ready system.
+
